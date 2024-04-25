@@ -74,6 +74,7 @@ The JSON configuration file plays a critical role in defining the dynamics of th
     }
   ]
 }
+```
 
 ## Movement Mechanics
 
