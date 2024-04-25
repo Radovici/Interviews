@@ -46,27 +46,27 @@ namespace PermutationsLibrary
         {
             foreach (string movePattern in piece.Moves)
             {
-                int newX = currentBoardPosition.X;
-                int newY = currentBoardPosition.Y;
-                foreach ((int dx, int dy) in piece.GetValidMoves(movePattern))
+                int newRowIndex = currentBoardPosition.RowIndex;
+                int newColIndex = currentBoardPosition.ColIndex;
+                foreach ((int deltaRowIndex, int deltaColIndex) in piece.GetValidMoves(currentBoardPosition, movePattern))
                 {
-                    newX = newX + dx;
-                    newY = newY + dy;
+                    newRowIndex = newRowIndex + deltaRowIndex;
+                    newColIndex = newColIndex + deltaColIndex;
                     if (movePattern.ToUpper() == movePattern) // uppercase, iterate over each change
                     {
                         // Check if the new position is within the board bounds
-                        if (newX >= 0 && newX < Rows && newY >= 0 && newY < Cols)
+                        if (newRowIndex >= 0 && newRowIndex < Rows && newColIndex >= 0 && newColIndex < Cols)
                         {
-                            yield return new BoardPosition(this, newX, newY);
+                            yield return new BoardPosition(this, newRowIndex, newColIndex);
                         }
                     }
                 }
                 if (movePattern.ToUpper() != movePattern) // lowercase, keep the last move
                 {
                     // Check if the new position is within the board bounds
-                    if (newX >= 0 && newX < Rows && newY >= 0 && newY < Cols)
+                    if (newRowIndex >= 0 && newRowIndex < Rows && newColIndex >= 0 && newColIndex < Cols)
                     {
-                        yield return new BoardPosition(this, newX, newY);
+                        yield return new BoardPosition(this, newRowIndex, newColIndex);
                     }
                 }
             }

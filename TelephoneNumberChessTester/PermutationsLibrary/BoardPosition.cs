@@ -11,23 +11,28 @@ namespace PermutationsLibrary
         public class BoardPosition : IBoardPosition
         {
             private readonly IBoard _board;
-            private readonly int _x;
-            private readonly int _y;
+            private readonly int _rowIndex;
+            private readonly int _colIndex;
 
-            public BoardPosition(IBoard board, int x, int y)
+            public BoardPosition(IBoard board, int rowIndex, int colIndex)
             {
                 _board = board;
-                _x = x;
-                _y = y;
+                _rowIndex = rowIndex;
+                _colIndex = colIndex;
             }
 
             public IBoard Board => _board;
 
-            public int X => _x;
+            public int RowIndex => _rowIndex;
 
-            public int Y => _y;
+            public int ColIndex => _colIndex;
 
-            public char Value => _board.BoardValues[_x][_y];
+            public char Value => _board.BoardValues[_rowIndex][_colIndex];
+
+            public override string ToString()
+            {
+                return $"[{RowIndex},{ColIndex}]={Value}";
+            }
         }
     }
 }

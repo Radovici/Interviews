@@ -28,6 +28,9 @@
     <None Update="Data\CheckersTest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Data\KeypadChessSimpleManualTest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\KeypadChessTest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

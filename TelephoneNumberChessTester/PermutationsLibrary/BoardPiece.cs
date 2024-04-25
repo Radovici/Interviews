@@ -26,22 +26,25 @@ namespace PermutationsLibrary
                 _moves = pieces.SelectMany(lmb => lmb.Moves).ToList();
             }
 
+            /// <summary>
+            /// (row, column)
+            /// </summary>
             private readonly Dictionary<char, (int, int)> moveMap = new Dictionary<char, (int, int)>
             {
-                {'u', (+1, 0)},
-                {'d', (-1, 0)},
+                {'u', (-1, 0)}, //NOTE: up is negative! becasue [0,0] is the top-left corner!
+                {'d', (+1, 0)},
                 {'r', (0, +1)},
                 {'l', (0, -1)},
-                {'q', (+1, -1)},
-                {'w', (+1, +1)},
-                {'s', (-1, +1)},
-                {'a', (-1, -1)}
+                {'q', (-1, -1)},
+                {'w', (-1, +1)},
+                {'s', (+1, +1)},
+                {'a', (+1, -1)}
             };
 
             public string Name => _name;
             public IEnumerable<string> Moves { get { return _moves; } }
 
-            public IEnumerable<(int, int)> GetValidMoves(string movePattern)
+            public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, string movePattern)
             {
                 foreach (char move in movePattern)
                 {
@@ -54,14 +57,13 @@ namespace PermutationsLibrary
                             int repeatCount = 1;
                             while (true)
                             {
-                                var repeatedOffset = (offset.Item1 * repeatCount, offset.Item2 * repeatCount);
-                                yield return repeatedOffset;
-
+                                var repeatedOffset = (offset.Item1 * repeatCount, offset.Item2 * repeatCount); //repeated is for determining if off-board
                                 repeatCount++;
-                                if (!IsWithinBoard(repeatedOffset))
+                                if (!IsWithinBoard(boardPosition, repeatedOffset))
                                 {
                                     break;
                                 }
+                                yield return offset; //same incremental offset
                             }
                         }
                         else
@@ -81,12 +83,12 @@ namespace PermutationsLibrary
                 return Name;
             }
 
-            private bool IsWithinBoard((int, int) offset)
+            private bool IsWithinBoard(IBoardPosition boardPosition, (int, int) offset)
             {
                 // Check if the move goes out of the board bounds
-                int newX = offset.Item1;
-                int newY = offset.Item2;
-                return newX >= 0 && newX < _board.Cols && newY >= 0 && newY < _board.Rows; // Assuming 8x8 chessboard
+                int newRowIndex = boardPosition.RowIndex + offset.Item1;
+                int newColIndex = boardPosition.ColIndex + offset.Item2;
+                return newRowIndex >= 0 && newRowIndex < _board.Rows && newColIndex >= 0 && newColIndex < _board.Cols; // Assuming 8x8 chessboard
             }
         }
     }

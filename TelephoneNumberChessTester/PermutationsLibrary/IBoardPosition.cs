@@ -9,8 +9,8 @@ namespace PermutationsLibrary
     public interface IBoardPosition
     {
         public IBoard Board { get; }
-        public int X { get; }
-        public int Y { get; }
+        public int RowIndex { get; }
+        public int ColIndex { get; }
         public char Value { get; }
     }
 }

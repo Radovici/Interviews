@@ -1,0 +1,43 @@
+﻿{
+  "board": [
+    [ "1", "2", "3" ],
+    [ "4", "5", "6" ],
+    [ "7", "8", "9" ],
+    [ "*", "0", "#" ]
+  ],
+  "exclusions": [
+    "p => p.Contains(\"*\") || p.Contains(\"#\")", // Exclude numbers containing * or #
+    "p => p.StartsWith(\"0\") || p.StartsWith(\"1\")" // Exclude numbers starting with 0 or 1
+  ],
+  "terminators": [ "p => p.Length == 2" ],
+  "pieces": [
+    {
+      "name": "Pawn",
+      "moves": [ "u" ]
+    },
+    {
+      "name": "Rook",
+      "moves": [ "U", "D", "R", "L" ]
+    },
+    {
+      "name": "Knight",
+      "moves": [ "uur", "uul", "llu", "lld", "rru", "rrd", "ddl", "ddr" ]
+    },
+    {
+      "name": "Bishop",
+      "moves": [ "Q", "W", "S", "A" ]
+    },
+    {
+      "name": "Queen",
+      "moves": [ "U", "D", "R", "L", "Q", "W", "S", "A" ]
+    },
+    {
+      "name": "King",
+      "moves": [ "q", "w", "s", "a" ]
+    },
+    {
+      "name": "Eldar",
+      "moves": [ "ll", "rr" ]
+    }
+  ]
+}
