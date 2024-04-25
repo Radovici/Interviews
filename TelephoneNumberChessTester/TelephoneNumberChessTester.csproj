@@ -9,15 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PermutationsLibrary\**" />
+    <EmbeddedResource Remove="PermutationsLibrary\**" />
+    <None Remove="PermutationsLibrary\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.12" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Phone Number Permutations\PermutationsLibrary.csproj" />
+    <ProjectReference Include="PermutationsLibrary\PermutationsLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\CheckersTest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\KeypadChessTest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
