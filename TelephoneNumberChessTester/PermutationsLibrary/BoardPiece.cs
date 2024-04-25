@@ -32,10 +32,10 @@ namespace PermutationsLibrary
                 {'d', (-1, 0)},
                 {'r', (0, +1)},
                 {'l', (0, -1)},
-                {'1', (+1, -1)},
-                {'2', (+1, +1)},
-                {'3', (-1, +1)},
-                {'4', (-1, -1)}
+                {'q', (+1, -1)},
+                {'w', (+1, +1)},
+                {'s', (-1, +1)},
+                {'a', (-1, -1)}
             };
 
             public string Name => _name;
@@ -45,15 +45,7 @@ namespace PermutationsLibrary
             {
                 foreach (char move in movePattern)
                 {
-                    if (move == Board.WILDCARD)
-                    {
-                        // For the King piece, return all possible moves
-                        foreach (var offset in moveMap.Values)
-                        {
-                            yield return offset;
-                        }
-                    }
-                    else if (moveMap.TryGetValue(char.ToLower(move), out var offset))
+                    if (moveMap.TryGetValue(char.ToLower(move), out var offset))
                     {
                         // Handle uppercase moves indicating multiple steps
                         if (char.IsUpper(move))

@@ -25,15 +25,15 @@
     },
     {
       "name": "Bishop",
-      "moves": [ "1", "2", "3", "4" ]
+      "moves": [ "Q", "W", "S", "A" ]
     },
     {
       "name": "Queen",
-      "moves": [ "U", "D", "R", "L", "1", "2", "3", "4" ]
+      "moves": [ "U", "D", "R", "L", "Q", "W", "S", "A" ]
     },
     {
       "name": "King",
-      "moves": [ "*" ]
+      "moves": [ "q", "w", "s", "a" ]
     },
     {
       "name": "Eldar",
