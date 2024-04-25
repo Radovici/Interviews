@@ -106,16 +106,21 @@ public IEnumerable<IBoardPosition> NextMoves(IBoardPiece piece, IBoardPosition c
         int newY = currentBoardPosition.Y;
         foreach ((int dx, int dy) in piece.GetValidMoves(movePattern))
         {
-            newX += dx;
-            newY += dy;
-            if (char.IsUpper(movePattern[0])) // Handle uppercase moves
+            newX = newX + dx;
+            newY = newY + dy;
+            if (movePattern.ToUpper() == movePattern) // uppercase, iterate over each change
             {
+                // Check if the new position is within the board bounds
                 if (newX >= 0 && newX < Rows && newY >= 0 && newY < Cols)
                 {
                     yield return new BoardPosition(this, newX, newY);
                 }
             }
-            else if (newX >= 0 && newX < Rows && newY >= 0 && newY < Cols) // Lowercase moves, check last position
+        }
+        if (movePattern.ToUpper() != movePattern) // lowercase, keep the last move
+        {
+            // Check if the new position is within the board bounds
+            if (newX >= 0 && newX < Rows && newY >= 0 && newY < Cols)
             {
                 yield return new BoardPosition(this, newX, newY);
             }
