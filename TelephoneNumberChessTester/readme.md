@@ -14,12 +14,12 @@ The original PDF with detailed instructions and guidelines for this project can 
 ## Results
 The engine calculates the number of possible telephone numbers per chess piece based on their movements across the board:
 - Pawn: 0
-- Rook: 5034
+- Rook: 49326
 - Knight: 952
-- Bishop: 864
-- Queen: 135495
-- King: 864
-- Eldar (Custom Piece): 120
+- Bishop: 2341
+- Queen: 751503
+- King: 124908
+- Eldar (Custom Piece): 5
 
 ## JSON Configuration
 The JSON configuration file plays a critical role in defining the dynamics of the chess engine. It allows for the flexible specification of board layouts, piece movements, and game rules without altering the underlying codebase. Here's a breakdown of the key components:
@@ -29,7 +29,7 @@ The JSON configuration file plays a critical role in defining the dynamics of th
 - **Terminators:** Defines conditions under which a series of moves should terminate.
 - **Pieces:** Specifies the types of pieces available and their respective movement patterns.
 
-### Example Configuration:
+### Example Configuration [KeypadChessTest.json](./Data/KeypadChessTest.json):
 ```json
 {
   "board": [
@@ -66,7 +66,7 @@ The JSON configuration file plays a critical role in defining the dynamics of th
     },
     {
       "name": "King",
-      "moves": [ "q", "w", "s", "a" ]
+      "moves": [ "u", "d", "r", "l", "q", "w", "s", "a" ]
     },
     {
       "name": "Eldar",
@@ -166,7 +166,7 @@ This configuration was designed to test the basic functionality of movement and 
 ## Test Results
 A screenshot of the test results, shown below, captured during the manual testing phase, is available in this repository. This image shows the outcome of the engine's calculations and is crucial for visual verification of the expected behavior.
 
-This screenshot is an integral part of the testing documentation, providing a visual confirmation of how the chess engine handles configurations and moves as defined by the KeypadChessSimpleManualTest.json.
+This screenshot is an integral part of the testing documentation, providing a visual confirmation of how the chess engine handles configurations and moves as defined by the [KeypadChessSimpleManualTest.json](./Data/KeypadChessSimpleManualTest.json).
 
 ![Manual test screenshot using length terminator=2](ManualTest.png)
 

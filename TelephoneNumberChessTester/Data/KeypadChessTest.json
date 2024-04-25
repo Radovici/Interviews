@@ -33,7 +33,7 @@
     },
     {
       "name": "King",
-      "moves": [ "q", "w", "s", "a" ]
+      "moves": [ "u", "d", "r", "l", "q", "w", "s", "a" ]
     },
     {
       "name": "Eldar",
