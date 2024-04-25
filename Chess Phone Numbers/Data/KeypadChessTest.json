@@ -5,6 +5,39 @@
     [ "7", "8", "9" ],
     [ "*", "0", "#" ]
   ],
-  "exclusions": [ "#", "*" ],
-  "terminators": [ "p => p.Contains(\"#\");", "p => p.Contains(\"*\");", "p => p.Length == 7;" ]
+  "exclusions": [
+    "p => p.Contains(\"*\") || p.Contains(\"#\")", // Exclude numbers containing * or #
+    "p => p.StartsWith(\"0\") || p.StartsWith(\"1\")" // Exclude numbers starting with 0 or 1
+  ],
+  "terminators": [ "p => p.Length == 7" ],
+  "pieces": [
+    {
+      "name": "Pawn",
+      "moves": [ "u" ]
+    },
+    {
+      "name": "Rook",
+      "moves": [ "U", "D", "R", "L" ]
+    },
+    {
+      "name": "Knight",
+      "moves": [ "uur", "uul", "llu", "lld", "rru", "rrd", "ddl", "ddr" ]
+    },
+    {
+      "name": "Bishop",
+      "moves": [ "1", "2", "3", "4" ]
+    },
+    {
+      "name": "Queen",
+      "moves": [ "U", "D", "R", "L", "1", "2", "3", "4" ]
+    },
+    {
+      "name": "King",
+      "moves": [ "*" ]
+    },
+    {
+      "name": "Eldar",
+      "moves": [ "ll", "rr" ]
+    }
+  ]
 }

@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess Phone Numbers", "Chess Phone Numbers.csproj", "{B6394B03-2BA6-4D39-9AA9-05155837B93B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelephoneNumberChessTester", "TelephoneNumberChessTester.csproj", "{B6394B03-2BA6-4D39-9AA9-05155837B93B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phone Number Permutations", "..\Phone Number Permutations\Phone Number Permutations.csproj", "{F2E95E17-B4FF-4552-AD70-84EFFEEE6E3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermutationsLibrary", "..\Phone Number Permutations\PermutationsLibrary.csproj", "{F2E95E17-B4FF-4552-AD70-84EFFEEE6E3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{072B77B7-453A-46E1-9AF7-514B4A1E769C}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

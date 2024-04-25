@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Phone_Number_Permutations;
+using System.Linq.Expressions;
+using PermutationsLibrary;
 
-namespace Chess_Phone_Numbers
+namespace TelephoneNumberChessTester
 {
     internal class Program
     {
-        private static dynamic _savedConfigJson;
+        private static bool _isVerbose = false;
+        private static dynamic _savedConfigJson;        
 
         static void Main(string[] args)
         {
@@ -15,8 +17,17 @@ namespace Chess_Phone_Numbers
                 Console.WriteLine("Please choose an option:");
                 Console.WriteLine("1. Enter configuration");
                 Console.WriteLine("2. Select piece and run program");
-                Console.WriteLine("3. Exit");
-
+                if (_isVerbose)
+                {
+                    Console.WriteLine("3. Just output number of permutations, i.e., phone numbers.");
+                }
+                else
+                {
+                    Console.WriteLine("3. Show more details, i.e., verbose option.");
+                }                
+                Console.WriteLine("4. Exit");
+                Console.WriteLine(); // Add a blank line here
+                Console.Write("Input: ");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -28,18 +39,23 @@ namespace Chess_Phone_Numbers
                         RunProgram();
                         break;
                     case "3":
+                        _isVerbose = !_isVerbose;
+                        break;
+                    case "4":
                         Environment.Exit(0);
                         break;
                     default:
-                        Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
+                        Console.WriteLine("Invalid choice. Please enter 1, 2, 3, or 4.");
                         break;
                 }
+
+                Console.WriteLine(); // Add another blank line after each iteration
             }
         }
 
         static void EnterConfiguration()
         {
-            Console.WriteLine("Enter the path to the configuration file (e.g., config.json, press Enter to use default):");
+            Console.Write("Enter the path to the configuration file (e.g., config.json, press Enter to use default): ");
             string filePath = Console.ReadLine();
 
             if (string.IsNullOrEmpty(filePath))
@@ -82,65 +98,39 @@ namespace Chess_Phone_Numbers
             }
         }
 
+        private static List<Func<string, bool>> LoadTerminators(JArray terminators)
+        {
+            var terminatorList = new List<Func<string, bool>>();
+            foreach (var terminator in terminators)
+            {
+                string condition = terminator.ToString();
+                var lambdaExpression = ParseLambda(condition);
+                terminatorList.Add((Func<string, bool>)lambdaExpression.Compile());
+            }
+            return terminatorList;
+        }
+
+        private static LambdaExpression ParseLambda(string expression)
+        {
+            // Split the string into parameter and body
+            string[] parts = expression.Split(new[] { "=>" }, StringSplitOptions.None);
+
+            // Parse the parameter
+            ParameterExpression parameter = Expression.Parameter(typeof(string), parts[0].Trim());
+
+            // Parse the body
+            Expression body = System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(new[] { parameter }, null, parts[1].Trim()).Body;
+
+            // Create and return the lambda expression
+            return Expression.Lambda(body, parameter);
+        }
+
         static void RunProgram()
         {
             if (_savedConfigJson == null)
             {
                 Console.WriteLine("No configuration loaded. Loading default configuration.");
                 LoadConfiguration("Data/KeypadChessTest.json"); // Load default configuration
-            }
-
-            // Define the piece
-            Console.WriteLine("Select the piece to use:");
-            Console.WriteLine("1. Pawn");
-            Console.WriteLine("2. Rook");
-            Console.WriteLine("3. Knight");
-            Console.WriteLine("4. Bishop");
-            Console.WriteLine("5. Queen");
-            Console.WriteLine("6. King");
-
-            string pieceChoice = Console.ReadLine();
-
-            IPiece selectedPiece = null;
-            switch (pieceChoice)
-            {
-                case "1":
-                    selectedPiece = ChessPieces.Pawn;
-                    break;
-                case "2":
-                    selectedPiece = ChessPieces.Rook;
-                    break;
-                case "3":
-                    selectedPiece = ChessPieces.Knight;
-                    break;
-                case "4":
-                    selectedPiece = ChessPieces.Bishop;
-                    break;
-                case "5":
-                    selectedPiece = ChessPieces.Queen;
-                    break;
-                case "6":
-                    selectedPiece = ChessPieces.King;
-                    break;
-                default:
-                    Console.WriteLine("Invalid piece choice.");
-                    return;
-            }
-
-            // Parse exclusions from saved configuration
-            var exclusions = new List<Func<string, bool>>();
-            foreach (var exclusion in _savedConfigJson["exclusions"])
-            {
-                var condition = exclusion.ToString();
-                exclusions.Add(p => p.Contains(condition));
-            }
-
-            // Parse terminators from saved configuration
-            var terminators = new List<Func<string, bool>>();
-            foreach (var terminator in _savedConfigJson["terminators"])
-            {
-                var condition = terminator.ToString();
-                terminators.Add(p => p == condition);
             }
 
             // Parse board layout from saved configuration
@@ -158,17 +148,58 @@ namespace Chess_Phone_Numbers
             // Create board instance
             IBoard board = new Board(boardValues);
 
+            // Parse exclusions from saved configuration
+            List<Func<string, bool>> exclusions = LoadTerminators((JArray)_savedConfigJson["exclusions"]);
+
+            // Parse terminators from saved configuration
+            List<Func<string, bool>> terminators = LoadTerminators((JArray)_savedConfigJson["terminators"]);
+
+            // Parse pieces from saved configuration and store configurations
+            var pieceConfigs = new List<(string name, string[] moves)>();
+            foreach (var pieceConfig in _savedConfigJson.pieces)
+            {
+                string name = pieceConfig["name"].ToString();
+                var moves = ((JArray)pieceConfig["moves"]).Select(m => m.ToString()).ToArray();
+                pieceConfigs.Add((name, moves));
+            }
+
+            // Display available pieces
+            Console.WriteLine("Available pieces:");
+            for (int i = 0; i < pieceConfigs.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {pieceConfigs[i].name}");
+            }
+
+            // Ask user to select a piece
+            Console.Write("Enter the number of the piece you want to play with: ");
+            int pieceIndex;
+            if (!int.TryParse(Console.ReadLine(), out pieceIndex) || pieceIndex < 1 || pieceIndex > pieceConfigs.Count)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid piece number.");
+                return;
+            }
+
+            // Get the selected piece configuration
+            var selectedPieceConfig = pieceConfigs[pieceIndex - 1];
+
+            // Create the selected piece
+            var selectedPiece = new Board.BoardPiece(board, selectedPieceConfig.name, selectedPieceConfig.moves);
+
             // Create Permuter instance
-            var permuter = new Permuter(board, new List<IPiece> { selectedPiece }, exclusions, terminators);
+            var permuter = new Permuter(board, new List<IBoardPiece> { selectedPiece }, exclusions, terminators);
 
             // Get permutations
             var permutations = permuter.GetPermutations(selectedPiece);
+            Console.WriteLine($"Number of permutations: {permutations.Count()}");
 
-            // Print permutations
-            foreach (var permutation in permutations)
+            if (_isVerbose)
             {
-                Console.WriteLine(permutation);
+                Console.WriteLine($"Permutations: {string.Join(",", permutations)}");
             }
+
+            Console.WriteLine();
+            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine();
         }
     }
 }

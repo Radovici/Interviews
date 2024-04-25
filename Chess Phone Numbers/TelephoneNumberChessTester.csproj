@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Phone Number Permutations\Phone Number Permutations.csproj" />
+    <ProjectReference Include="..\Phone Number Permutations\PermutationsLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
