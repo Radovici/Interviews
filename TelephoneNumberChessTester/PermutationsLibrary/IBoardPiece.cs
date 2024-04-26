@@ -10,7 +10,6 @@ namespace PermutationsLibrary
     {
         public string Name { get; }
         public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, string movePattern);
-
         public IEnumerable<string> Moves { get; }
     }
 }

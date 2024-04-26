@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\CustomInput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\CheckersTest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
