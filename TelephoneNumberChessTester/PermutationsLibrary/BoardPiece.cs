@@ -46,6 +46,7 @@ namespace PermutationsLibrary
 
             public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, string movePattern)
             {
+                (int, int) totalOffset = (0, 0); //no move yet
                 foreach (char move in movePattern)
                 {
                     if (moveMap.TryGetValue(char.ToLower(move), out var offset))
@@ -68,7 +69,7 @@ namespace PermutationsLibrary
                         }
                         else
                         {
-                            yield return offset;
+                            totalOffset = (totalOffset.Item1 + offset.Item1, totalOffset.Item2 + offset.Item2); //yield return offset;
                         }
                     }
                     else
@@ -76,6 +77,11 @@ namespace PermutationsLibrary
                         throw new ArgumentException($"Invalid move: {move}");
                     }
                 }
+                if (IsWithinBoard(boardPosition, totalOffset)
+                    && !(totalOffset.Item1 == 0 && totalOffset.Item2 == 0))
+                {
+                    yield return totalOffset; //return final offset / delta move
+                }                
             }
 
             public override string ToString()

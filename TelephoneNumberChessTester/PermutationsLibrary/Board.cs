@@ -52,17 +52,6 @@ namespace PermutationsLibrary
                 {
                     newRowIndex = newRowIndex + deltaRowIndex;
                     newColIndex = newColIndex + deltaColIndex;
-                    if (movePattern.ToUpper() == movePattern) // uppercase, iterate over each change
-                    {
-                        // Check if the new position is within the board bounds
-                        if (newRowIndex >= 0 && newRowIndex < Rows && newColIndex >= 0 && newColIndex < Cols)
-                        {
-                            yield return new BoardPosition(this, newRowIndex, newColIndex);
-                        }
-                    }
-                }
-                if (movePattern.ToUpper() != movePattern) // lowercase, keep the last move
-                {
                     // Check if the new position is within the board bounds
                     if (newRowIndex >= 0 && newRowIndex < Rows && newColIndex >= 0 && newColIndex < Cols)
                     {
