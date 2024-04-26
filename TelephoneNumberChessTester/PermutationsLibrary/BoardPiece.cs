@@ -21,9 +21,9 @@ namespace PermutationsLibrary
                 _moves = new List<string>(moves);
             }
 
-            public BoardPiece(IBoardPiece[] pieces)
+            public BoardPiece(IBoard board, string name, IBoardPiece[] pieces)
+                : this(board, name, pieces.SelectMany(lmb => lmb.Moves).ToArray())
             {
-                _moves = pieces.SelectMany(lmb => lmb.Moves).ToList();
             }
 
             /// <summary>
