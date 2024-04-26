@@ -108,17 +108,6 @@ public IEnumerable<IBoardPosition> NextMoves(IBoardPiece piece, IBoardPosition c
         {
             newRowIndex = newRowIndex + deltaRowIndex;
             newColIndex = newColIndex + deltaColIndex;
-            if (movePattern.ToUpper() == movePattern) // uppercase, iterate over each change
-            {
-                // Check if the new position is within the board bounds
-                if (newRowIndex >= 0 && newRowIndex < Rows && newColIndex >= 0 && newColIndex < Cols)
-                {
-                    yield return new BoardPosition(this, newRowIndex, newColIndex);
-                }
-            }
-        }
-        if (movePattern.ToUpper() != movePattern) // lowercase, keep the last move
-        {
             // Check if the new position is within the board bounds
             if (newRowIndex >= 0 && newRowIndex < Rows && newColIndex >= 0 && newColIndex < Cols)
             {
@@ -146,6 +135,46 @@ private readonly Dictionary<char, (int, int)> moveMap = new Dictionary<char, (in
     {'s', (+1, +1)},
     {'a', (+1, -1)}
 };
+
+public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, string movePattern)
+{
+    (int, int) totalOffset = (0, 0); //no move yet
+    foreach (char move in movePattern)
+    {
+        if (moveMap.TryGetValue(char.ToLower(move), out var offset))
+        {
+            // Handle uppercase moves indicating multiple steps
+            if (char.IsUpper(move))
+            {
+                // Convert uppercase move to lowercase and repeat the move
+                int repeatCount = 1;
+                while (true)
+                {
+                    var repeatedOffset = (offset.Item1 * repeatCount, offset.Item2 * repeatCount); //repeated is for determining if off-board
+                    repeatCount++;
+                    if (!IsWithinBoard(boardPosition, repeatedOffset))
+                    {
+                        break;
+                    }
+                    yield return offset; //same incremental offset
+                }
+            }
+            else
+            {
+                totalOffset = (totalOffset.Item1 + offset.Item1, totalOffset.Item2 + offset.Item2); //yield return offset;
+            }
+        }
+        else
+        {
+            throw new ArgumentException($"Invalid move: {move}");
+        }
+    }
+    if (IsWithinBoard(boardPosition, totalOffset)
+        && !(totalOffset.Item1 == 0 && totalOffset.Item2 == 0))
+    {
+        yield return totalOffset; //return final offset / delta move
+    }                
+}
 ```
 
 ## Testing
