@@ -162,6 +162,9 @@ namespace TelephoneNumberChessTester
                 var moves = ((JArray)pieceConfig["moves"]).Select(m => m.ToString()).ToArray();
                 pieceConfigs.Add((name, moves));
             }
+            //Add manual double down piece
+            DoubleDownBoardPiece doubleDownBoardPiece = new DoubleDownBoardPiece(board);
+            pieceConfigs.Add((doubleDownBoardPiece.Name, doubleDownBoardPiece.Moves.ToArray()));
 
             // Display available pieces
             Console.WriteLine("Available pieces:");
@@ -183,7 +186,15 @@ namespace TelephoneNumberChessTester
             var selectedPieceConfig = pieceConfigs[pieceIndex - 1];
 
             // Create the selected piece
-            var selectedPiece = new Board.BoardPiece(board, selectedPieceConfig.name, selectedPieceConfig.moves);
+            IBoardPiece selectedPiece;
+            if (selectedPieceConfig.name == doubleDownBoardPiece.Name)
+            {
+                selectedPiece = doubleDownBoardPiece;
+            }
+            else
+            {
+                selectedPiece = new Board.BoardPiece(board, selectedPieceConfig.name, selectedPieceConfig.moves);
+            }
 
             // Create Permuter instance
             var permuter = new Permuter(board, new List<IBoardPiece> { selectedPiece }, exclusions, terminators);

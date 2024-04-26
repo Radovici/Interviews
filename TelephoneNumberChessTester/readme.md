@@ -20,6 +20,7 @@ The engine calculates the number of possible telephone numbers per chess piece b
 - Queen: 751503
 - King: 124908
 - Eldar (Custom Piece): 5
+- DoubleDownBoardPiece (complex IBoardPiece with non standard chess moves): 8
 
 ## JSON Configuration
 The JSON configuration file plays a critical role in defining the dynamics of the chess engine. It allows for the flexible specification of board layouts, piece movements, and game rules without altering the underlying codebase. Here's a breakdown of the key components:
@@ -176,6 +177,10 @@ public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, strin
     }                
 }
 ```
+
+## Complex Board Pieces
+
+To use non-standard chess pieces, you can also implement your own IBoardPiece and use that. The default board will call your IBoardPiece's GetValidMoves to get the next moves. This is demonstrated using the DoubleDownBoardPiece.cs class which simply doubles the current keypads value in searching for the next move.
 
 ## Testing
 
