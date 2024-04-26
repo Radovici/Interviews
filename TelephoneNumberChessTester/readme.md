@@ -95,6 +95,9 @@ The chess engine uses a combination of lowercase and uppercase letters to define
 ### Uppercase Letters (`U`, `D`, `R`, `L`, `Q`, `W`, `S`, `A`)
 - Uppercase versions of the movement letters indicate the piece can move in the specified direction continuously until it reaches the edge of the board or encounters an obstacle. This is typically used for pieces like the Rook, Bishop, and Queen which can move multiple squares in a single move.
 
+### Unhandled Moves: Mix of lowercase and uppercase
+- Mix of lowercase and uppercase moves are not supported right now. For example, if you want to move a non-standard piece left once and then up one or more times (i.e., lU), this is not supported. This can be supported, if needed.
+
 ### Code Implementation
 The `NextMoves` function in the engine determines possible next positions for a piece based on its current position and move patterns:
 
@@ -180,7 +183,24 @@ public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, strin
 
 ## Complex Board Pieces
 
-To use non-standard chess pieces, you can also implement your own IBoardPiece and use that. The default board will call your IBoardPiece's GetValidMoves to get the next moves. This is demonstrated using the DoubleDownBoardPiece.cs class which simply doubles the current keypads value in searching for the next move.
+To use non-standard chess pieces, you can also implement your own IBoardPiece and use that. The default board will call your IBoardPiece's GetValidMoves to get the next moves. This is demonstrated using the DoubleDownBoardPiece.cs class which simply doubles the current keypads value in searching for the next move. Here is that explicit implementation:
+
+```csharp
+public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, string movePattern)
+{
+    int boardPositionValue;
+    if (!int.TryParse(boardPosition.Value.ToString(), out boardPositionValue))
+    {
+        boardPositionValue = 1;
+    }
+    IBoardPosition newBoardPosition = _board.AllPositions.Single(lmb => lmb.Value.ToString() == ((boardPositionValue * 2) % 10).ToString());
+    (int, int) offset = (newBoardPosition.RowIndex - boardPosition.RowIndex, newBoardPosition.ColIndex - boardPosition.ColIndex);
+    if (IsWithinBoard(boardPosition, offset))
+    {
+        yield return offset; //return final offset / delta move
+    }
+}
+```
 
 ## Testing
 
