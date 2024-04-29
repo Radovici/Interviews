@@ -25,7 +25,7 @@ The engine calculates the number of possible telephone numbers per chess piece b
 ## Performance
 I decided to add dynamic programming to my dynamic design using memoization (I love this word!). This problem lends itself to dynamic programming because the moves for any piece are the same so you really only have to calculate them once and use those cached values next time. The performance improvements, as expected, are huge. Most pieces are 3-5x faster; the knight is 8-10x faster. We see an outsized performance improvement for a knight because it does the same moves back and forth, per its specific movement. Here's a performance snippet screengrab.
 - Note: I used PostSharp's AOP [Cache] to implement the caching [quickly].
-[Performance Improvement using Dynamic Programming and Memoization](./Data/Memoization.png)
+![Performance Improvement using Dynamic Programming and Memoization](./Data/Memoization.png)
 
 ## JSON Configuration
 The JSON configuration file plays a critical role in defining the dynamics of the chess engine. It allows for the flexible specification of board layouts, piece movements, and game rules without altering the underlying codebase. Here's a breakdown of the key components:
