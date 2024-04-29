@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PostSharp.Patterns.Caching;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,7 @@ namespace PermutationsLibrary
             }
         }
 
+        [Cache]
         public IEnumerable<IBoardPosition> NextMoves(IBoardPiece piece, IBoardPosition currentBoardPosition)
         {
             foreach (string movePattern in piece.Moves)
@@ -59,6 +61,11 @@ namespace PermutationsLibrary
                     }
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Join("\n", _boardValues.Select(row => string.Join(", ", row)));
         }
     }
 }

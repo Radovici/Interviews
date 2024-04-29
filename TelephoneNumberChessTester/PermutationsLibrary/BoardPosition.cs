@@ -31,7 +31,7 @@ namespace PermutationsLibrary
 
             public override string ToString()
             {
-                return $"[{RowIndex},{ColIndex}]={Value}";
+                return $"[{RowIndex},{ColIndex}]={Value}\n{_board}";
             }
         }
     }

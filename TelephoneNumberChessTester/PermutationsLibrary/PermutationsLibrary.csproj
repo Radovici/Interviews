@@ -11,4 +11,8 @@
     <None Remove="axopiggy.1if~" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PostSharp.Patterns.Caching" Version="2024.0.8" />
+  </ItemGroup>
+
 </Project>

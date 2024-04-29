@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PostSharp.Patterns.Caching;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,7 @@ namespace PermutationsLibrary
             public string Name => _name;
             public IEnumerable<string> Moves { get { return _moves; } }
 
+            [Cache]
             public IEnumerable<(int, int)> GetValidMoves(IBoardPosition boardPosition, string movePattern)
             {
                 (int, int) totalOffset = (0, 0); //no move yet
@@ -86,7 +88,7 @@ namespace PermutationsLibrary
 
             public override string ToString()
             {
-                return Name;
+                return $"{_board}.{Name}.{string.Join(",", _moves)}";
             }
 
             private bool IsWithinBoard(IBoardPosition boardPosition, (int, int) offset)

@@ -2,6 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System.Linq.Expressions;
 using PermutationsLibrary;
+using PostSharp.Patterns.Caching.Backends;
+using PostSharp.Patterns.Caching;
+using System.Diagnostics;
 
 namespace TelephoneNumberChessTester
 {
@@ -36,7 +39,8 @@ namespace TelephoneNumberChessTester
                         EnterConfiguration();
                         break;
                     case "2":
-                        RunProgramWithJsonConfiguration();
+
+                        RunProgramWithJsonConfigurationAndBenchmark();
                         break;
                     case "3":
                         _isVerbose = !_isVerbose;
@@ -247,7 +251,7 @@ namespace TelephoneNumberChessTester
             return Expression.Lambda(body, parameter);
         }
 
-        static void RunProgramWithJsonConfiguration()
+        static void RunProgramWithJsonConfigurationAndBenchmark()
         {
             if (_savedConfigJson == null)
             {
@@ -318,6 +322,29 @@ namespace TelephoneNumberChessTester
                 selectedPiece = new Board.BoardPiece(board, selectedPieceConfig.name, selectedPieceConfig.moves);
             }
 
+            RunProgramWithJsonConfigurationWithCaching(board, selectedPiece, exclusions, terminators);
+            RunProgramWithJsonConfigurationWithNoCaching(board, selectedPiece, exclusions, terminators);
+        }
+
+        static void RunProgramWithJsonConfigurationWithCaching(IBoard board, IBoardPiece selectedPiece, IEnumerable<Func<string, bool>> exclusions, IEnumerable<Func<string, bool>> terminators)
+        {
+            Console.WriteLine("YES Caching (i.e., faster):");
+            CachingServices.DefaultBackend = new MemoryCachingBackend();
+            RunProgramWithJsonConfiguration(board, selectedPiece, exclusions, terminators);
+        }
+
+        static void RunProgramWithJsonConfigurationWithNoCaching(IBoard board, IBoardPiece selectedPiece, IEnumerable<Func<string, bool>> exclusions, IEnumerable<Func<string, bool>> terminators)
+        {
+            Console.WriteLine("NO Caching (i.e., slower):");
+            CachingServices.DefaultBackend = null;
+            RunProgramWithJsonConfiguration(board, selectedPiece, exclusions, terminators);
+        }
+
+        static void RunProgramWithJsonConfiguration(IBoard board, IBoardPiece selectedPiece, IEnumerable<Func<string, bool>> exclusions, IEnumerable<Func<string, bool>> terminators)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start(); // Start the stopwatch at the beginning of the method
+
             // Create Permuter instance
             var permuter = new Permuter(board, new List<IBoardPiece> { selectedPiece }, exclusions, terminators);
 
@@ -330,8 +357,11 @@ namespace TelephoneNumberChessTester
                 Console.WriteLine($"Permutations: {string.Join(",", permutations)}");
             }
 
+            stopwatch.Stop(); // Stop the stopwatch after the main operations
+
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine($"Elapsed Time: {stopwatch.ElapsedMilliseconds} ms"); // Display the elapsed time in milliseconds
             Console.WriteLine();
         }
     }
